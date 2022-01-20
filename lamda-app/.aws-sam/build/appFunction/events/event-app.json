@@ -1,0 +1,11 @@
+[
+  {
+    "httpMethod": "GET"
+  },
+  {
+    "httpMethod": "GET",
+    "queryStringParameters": {
+      "custid": "custid"
+    }
+  }
+]

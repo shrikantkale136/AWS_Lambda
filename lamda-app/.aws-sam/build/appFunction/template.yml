@@ -1,0 +1,139 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  lamda-app
+Transform:
+- AWS::Serverless-2016-10-31
+Resources:
+  appFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/app.customerHandler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 100
+      Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DynamoDBTable
+      Environment:
+        Variables:
+          SAMPLE_TABLE: !Ref DynamoDBTable
+      Events:
+        # Customer
+        GetCustomerAPI:
+          Type: Api
+          Properties:
+            Path: /feature/customer
+            Method: GET
+        GetSingleCustomerAPI:
+          Type: Api
+          Properties:
+            Path: /feature/customer/{custid}
+            Method: GET
+        PostCustomerAPI:
+          Type: Api
+          Properties:
+            Path: /feature/customer
+            Method: POST
+        PutCustomerAPI:
+          Type: Api
+          Properties:
+            Path: /feature/customer/{custid}
+            Method: PUT
+        DeleteCustomerAPI:
+          Type: Api
+          Properties:
+            Path: /feature/customer/{custid}
+            Method: DELETE
+
+  # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+        AttributeDefinitions: 
+        - 
+          AttributeName: "custid"
+          AttributeType: "N"
+        - 
+          AttributeName: "feature_code"
+          AttributeType: "S"
+        - 
+          AttributeName: "feature_name"
+          AttributeType: "S"
+        - 
+          AttributeName: "enabled"
+          AttributeType: "S"
+        - 
+          AttributeName: "inserted"
+          AttributeType: "S"
+        KeySchema: 
+        - 
+          AttributeName: "custid"
+          KeyType: "HASH"
+        - 
+          AttributeName: "feature_code"
+          KeyType: "RANGE"
+        ProvisionedThroughput: 
+          ReadCapacityUnits: "5"
+          WriteCapacityUnits: "5"
+        TableName: "customer-feature"
+        GlobalSecondaryIndexes: 
+        - 
+          IndexName: "myGSI"
+          KeySchema: 
+            - 
+              AttributeName: "feature_name"
+              KeyType: "HASH"
+            - 
+              AttributeName: "feature_code"
+              KeyType: "RANGE"
+          Projection: 
+            NonKeyAttributes: 
+              - "custid"
+              - "enabled"
+              - "inserted"
+            ProjectionType: "INCLUDE"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+        - 
+          IndexName: "myGSI2"
+          KeySchema: 
+            - 
+              AttributeName: "enabled"
+              KeyType: "HASH"
+            - 
+              AttributeName: "feature_name"
+              KeyType: "RANGE"
+          Projection: 
+            NonKeyAttributes: 
+              - "custid"
+              - "feature_code"
+              - "inserted"
+            ProjectionType: "INCLUDE"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+        - 
+          IndexName: "myGSI3"
+          KeySchema: 
+            - 
+              AttributeName: "inserted"
+              KeyType: "HASH"
+            - 
+              AttributeName: "enabled"
+              KeyType: "RANGE"
+          Projection: 
+            NonKeyAttributes: 
+              - "custid"
+              - "feature_code"
+              - "feature_name"
+            ProjectionType: "INCLUDE"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+
+Outputs:
+  WebEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

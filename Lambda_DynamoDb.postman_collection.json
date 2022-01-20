@@ -1,0 +1,94 @@
+{
+	"info": {
+		"_postman_id": "06ec050a-2dd2-4209-9941-5da6ad4747c0",
+		"name": "Lambda_DynamoDb",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://fz2istliwb.execute-api.us-east-2.amazonaws.com/prod/features",
+					"protocol": "https",
+					"host": [
+						"fz2istliwb",
+						"execute-api",
+						"us-east-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"features"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Custemer",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"custid\": 1,\r\n    \"updateKey\":\"Feature_Code\", \r\n    \"updateValue\":\"updated code\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://fz2istliwb.execute-api.us-east-2.amazonaws.com/prod/features",
+					"protocol": "https",
+					"host": [
+						"fz2istliwb",
+						"execute-api",
+						"us-east-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"features"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get customer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://fz2istliwb.execute-api.us-east-2.amazonaws.com/prod/feature?custid=1",
+					"protocol": "https",
+					"host": [
+						"fz2istliwb",
+						"execute-api",
+						"us-east-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"feature"
+					],
+					"query": [
+						{
+							"key": "custid",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
